@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat con Socket.IO</title>
+
+    <link rel="stylesheet" href="./style.css">
+
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Conexión de Socket.IO al servidor
+        var socket = io();
+
+        // Función para enviar mensajes del chat 1
+        function enviarMensaje1() {
+            var mensaje = document.getElementById('mensaje1').value;
+            socket.emit('chat message 1', mensaje);
+            document.getElementById('mensaje1').value = '';
+            return false;
+        }
+
+        // Función para recibir mensajes del chat 1
+        socket.on('chat message 1', function(msg){
+            var listaMensajes = document.getElementById('lista-mensajes');
+            var mensaje = document.createElement('li');
+            mensaje.textContent = "Chat 1: " + msg;
+            listaMensajes.appendChild(mensaje);
+        });
+
+        // Función para enviar mensajes del chat 2
+        function enviarMensaje2() {
+            var mensaje = document.getElementById('mensaje2').value;
+            socket.emit('chat message 2', mensaje);
+            document.getElementById('mensaje2').value = '';
+            return false;
+        }
+
+        // Función para recibir mensajes del chat 2
+        socket.on('chat message 2', function(msg){
+            var listaMensajes = document.getElementById('lista-mensajes');
+            var mensaje = document.createElement('li');
+            mensaje.textContent = "Chat 2: " + msg;
+            listaMensajes.appendChild(mensaje);
+        });
+
+    </script>
+
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            
+        }
+
+        .caja{
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            align-items: center;
+            gap: 50px;
+        }
+        .chat1 , .chat2{
+            background: orange;
+            /*border-radius: 12px;*/
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+        }
+        .cabezera{
+            background: green;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 250px;
+
+            
+        }
+
+        .cabezera  img{
+            width: 50px;
+            height: 50px;
+            font-weight: 500;
+            border-radius: 50px;
+        }
+        .titulo{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mensajesx li{
+            background-color: white;
+            color: red;
+            text-decoration: none;
+            list-style: none;
+        }
+
+        .separar{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .separar img{
+            width: 40px;
+            height: 40px;
+            font-weight: 400;
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+    <h1>Chat 1</h1>
+    <form onsubmit="return enviarMensaje1()">
+        <input id="mensaje1" autocomplete="off" />
+        <button>Enviar</button>
+    </form>
+
+    <h1>Chat 2</h1>
+    <form onsubmit="return enviarMensaje2()">
+        <input id="mensaje2" autocomplete="off" />
+        <button>Enviar</button>
+    </form>
+
+    <h1>Mensajes</h1>
+  
+
+    <section class="caja">
+
+
+        <div class="chat1">
+            <div class="cabezera">
+                <div class="titulo">
+                    <img src="https://4kwallpapers.com/images/walls/thumbs/11189.jpeg" alt="Perfil">
+                    <div class="nombre">
+                        <h2>Usuario1</h2>
+                        <p>En linea</p>
+
+                    </div>
+                </div>
+                <div class="iconos">
+                    <a href="">A</a>
+                    <a href="">B</a>
+                    <a href="">C</a>
+
+                </div>
+            </div>
+
+            <div class="mensajesx">
+                <ul id="lista-mensajes"></ul>
+            </div>
+
+            <div class="escribir">
+                <div class="separar">
+                    <form onsubmit="return enviarMensaje1()">
+                        <input id="mensaje1" autocomplete="off" />
+                        <button>Enviar</button>
+                    </form>
+                    <div class="sonido">
+                        <img src="https://png.pngtree.com/element_our/20190528/ourmid/pngtree-flat-microphone-image_1129405.jpg" alt="">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <div class="chat2">
+            <div class="cabezera">
+                <img src="https://4kwallpapers.com/images/walls/thumbs/11189.jpeg" alt="Perfil">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    
+
+
+</body>
+</html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat con Socket.IO</title>
+
+
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Prata&display=swap" rel="stylesheet">
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://kit.fontawesome.com/2811698395.js" crossorigin="anonymous"></script>
+    <script>
+
+        //Busqueda Usuario
+        //http://localhost:4000/usarios/6441d04c3e9884b77a67f668
+        const URLu = "http://localhost:4000/usarios/";
+        const verUsuario = async (id) => {
+            try {
+                const t = await axios.get(URLu + id);
+                console.log("------------------------------------")
+                //console.log(t.data)
+                return t.data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        //verUsuario("6441d04c3e9884b77a67f668")
+
+
+
+
+
+
+
+
+        //Consumiendo api nomgoDB
+
+        const URL = "http://localhost:4000";
+
+
+        const Vertodo = async () => {
+            try {
+                const t = await axios.get(URL);
+                console.log("Historial de mensajes")
+                console.log(t.data)
+                return t.data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        console.log(Vertodo())
+
+        const Vertusu1 = async () => {
+            try {
+                const t = await axios.get(URL + "/usu1");
+                console.log("Mensajes enviados por el  Usuario1")
+                console.log(t.data)
+                return t.data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        console.log(Vertusu1())
+
+        const Vertusu2 = async () => {
+            try {
+                const t = await axios.get(URL + "/usu2");
+                console.log("Mensajes enviados por el  Usuario2")
+                console.log(t.data)
+                return t.data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        console.log(Vertusu2())
+
+
+
+
+        //Registrando mensajes
+        const Guardar1 = async (name, mensaje) => {
+            try {
+                await axios.post(URL, {
+                    "name": String(name),
+                    "mensaje": String(mensaje),
+
+                });
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+
+        const R = async (_id, msg) => {
+            try {
+                await axios.post(URL + "/pruebas", {
+                    "_id": String(_id),
+                    "msg": String(msg),
+
+                });
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+
+
+
+
+        // Conexión de Socket.IO al servidor
+        var socket = io();
+        var today = new Date();
+
+        var now = today.toLocaleTimeString('en-US');
+
+
+        // Función para enviar mensajes del chat 1
+        function enviarMensaje1() {
+            var mensaje = document.getElementById('mensaje1').value;
+            socket.emit('chat message 1', mensaje);
+            document.getElementById('mensaje1').value = '';
+            Guardar1("Usu1", mensaje)   //Guardando mensaje mediante API Mongo
+            R("64446455f9e667147c44c1e6", mensaje)   //Guardando mensaje mediante API Mongo  Gillermo
+            return false;
+        }
+
+        // Función para recibir mensajes del chat 1----------------------------------------------------------
+        socket.on('chat message 1', function (msg) {
+            var listaMensajes = document.getElementById('lista-mensajes');
+
+            const cajaTexto = (x, y) => {
+                var men = document.createElement('li');
+                men.style.cssText = 'background-color: #3E3E3E; text-align: left; width:50%; padding:4px; border-radius: 0px 18px 18px 18px; ';
+                const contenido = `
+                    <div class="caja-producto">  
+                            <a class="txt">${x}</a><br>  
+                            <a>${y}</a>                            
+                    </div>
+                    `;
+                men.innerHTML = contenido;
+                return (men)
+            }
+
+            const mostrar = cajaTexto(msg, now);
+            listaMensajes.appendChild(mostrar);
+        });
+
+        socket.on('chat message 1', function (msg) {
+            var listaMensajes = document.getElementById('lista-mensajes2');
+            //var mensaje = document.createElement('li');
+
+            const cajaTexto = (x, y) => {
+
+                var men = document.createElement('li');
+                men.style.cssText = 'background-color: #128C7E; margin-left: 240px; width:50%; padding:4px; border-radius: 18px 0px 18px 18px; ';
+                const contenido = `
+                                    <div class="caja-producto">  
+                                            <a class="txt">${x}</a><br>  
+                                            <a>${y}</a>  
+                                            
+                                    </div>
+                                    `;
+                men.innerHTML = contenido;
+                return (men)
+            }
+
+            const mostrar = cajaTexto(msg, now);
+            listaMensajes.appendChild(mostrar);
+        });
+
+        //----------------------------------------------------------------------------------------------------------
+
+        // Función para enviar mensajes del chat 2
+        function enviarMensaje2() {
+            var mensaje = document.getElementById('mensaje2').value;
+            socket.emit('chat message 2', mensaje);
+            document.getElementById('mensaje2').value = '';
+            R("6444647bf9e667147c44c1e8", mensaje)   //Guardando mensaje mediante API Mongo  Maria
+            return false;
+        }
+
+        // Función para recibir mensajes del chat 2
+        socket.on('chat message 2', function (msg) {
+            var listaMensajes = document.getElementById('lista-mensajes');
+
+            const cajaTexto = (x, y) => {
+
+                var men = document.createElement('li');
+                men.style.cssText = 'background-color: #128C7E; margin-left: 240px; width:50%; padding:4px; border-radius: 18px 0px 18px 18px; ';
+                const contenido = `
+                    <div class="caja-producto">  
+                            <a class="txt">${x}</a><br>  
+                            <a>${y}</a>  
+                            
+                    </div>
+                    `;
+                men.innerHTML = contenido;
+                return (men)
+            }
+
+            const mostrar = cajaTexto(msg, now);
+            listaMensajes.appendChild(mostrar);
+
+        });
+        socket.on('chat message 2', function (msg) {
+            var listaMensajes = document.getElementById('lista-mensajes2');
+
+            const cajaTexto = (x, y) => {
+
+                var men = document.createElement('li');
+                men.style.cssText = 'background-color: #3E3E3E; text-align: left; width:50%; padding:4px; border-radius: 0px 18px 18px 18px;  ';
+                const contenido = `
+                                    <div class="caja-producto">  
+                                            <a class="txt">${x}</a><br>  
+                                            <a>${y}</a>                                           
+                                    </div>
+                                `;
+                men.innerHTML = contenido;
+                return (men)
+            }
+
+            const mostrar = cajaTexto(msg, now);
+            listaMensajes.appendChild(mostrar);
+        });
+
+
+
+
+
+
+
+
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+
+        }
+
+        .caja {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            align-items: center;
+            margin: auto;
+            gap: 15px;
+            padding: 100px;
+            /*background-color: rgb(150, 61, 61);*/
+
+        }
+
+        .chat1,
+        .chat2 {
+            background-color: black;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .chat1 .camara {
+            display: flex;
+            justify-content: center;
+            padding: 5px;
+        }
+
+        .chat1 .camara .lente {
+            background: gray;
+            width: 15px;
+            height: 15px;
+            border-radius: 50px;
+
+        }
+
+        .chat1 .dock {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+
+        }
+
+        .chat1 .dock .btn {
+            background: black;
+            width: 40px;
+            height: 40px;
+            border-radius: 50px;
+            border: 1.5px solid white;
+
+        }
+
+        .cabezera {
+            background: green;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+
+
+
+        }
+
+        .cabezera img {
+            width: 50px;
+            height: 50px;
+            font-weight: 500;
+            border-radius: 50px;
+        }
+
+
+
+        .title {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .title .nombre{
+            text-align: justify;
+        }
+
+        .title a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .cabezera .iconos {
+            display: flex;
+            gap: 20px;
+        }
+
+        .mensajesx {
+            display: flex;
+            background-color: #273443;
+            /*height: 400px;*/
+            min-height: 500px;
+            justify-content: center;
+            text-decoration: none;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            
+
+
+        }
+
+        .mensajesx ul {
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            background-color: #273443;
+            color: rgb(0, 255, 85);
+            padding: 5px;
+            margin-top: 3px;
+            text-decoration: none;
+            text-align: end;
+            
+        }
+        .mensajesx li {
+            background-color: rgb(21, 22, 21);
+            color: white;
+            padding: -4px;
+            margin-top: 3px;
+            text-decoration: none;
+            list-style: none;
+            /*border-radius: 10px;*/
+           
+
+        }
+
+        /*Posicinamiento de texto recibido*/
+        .mensajesx li .txt {
+            display: flex;
+            justify-content: flex-start;
+
+        }
+
+        .separar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /*background: blue;*/
+            gap: 5px;
+        }
+
+        .separar img {
+            width: 40px;
+            height: 40px;
+            font-weight: 400;
+        }
+
+        .separar input {
+            width: 400px;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            outline-color: rgb(10, 150, 10);
+
+        }
+
+        .lista-mensajes {
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            gap: 100px;
+
+        }
+        .letras{
+            position: relative;
+            
+        }
+
+        .letras .fondo{
+            display: flex;
+            position: absolute;
+            left: 370px;
+            top: 12px;
+            gap: 10px;
+        }
+
+        .letras button {
+            background: #14eb2d;
+            padding: 10px;
+            border: none;
+            border-radius: 35px;
+            color: white;
+        }
+
+        .sonido {
+            background: rgb(5, 170, 5);
+            padding: 5px;
+            border-radius: 50px;
+        }
+
+        .caja-micro {
+            padding: 8px;
+            border-radius: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Chat En tiempo Real</h1>
+
+    <section class="caja">
+
+
+
+        <div class="chat1">
+            <div class="camara">
+                <div class="lente"></div>
+            </div>
+
+            <div class="cabezera">
+                <div class="titulo">
+                    <div class="wasap1"></div>
+                </div>
+                <div class="iconos">
+                    <a href="#"><i class="fa-solid fa-phone" style="color: white; font-size: 20px;"></i></a>
+                    <a href="#"><i class="fa-solid fa-paperclip fa-rotate-270"
+                            style="color: white; font-size: 20px;"></i></a>
+                    <a href="#"><i class="fa-solid fa-ellipsis fa-rotate-90"
+                            style="color: white; font-size: 20px;"></i></a>
+
+                </div>
+            </div>
+
+            <div class="mensajesx">
+                <ul id="lista-mensajes2">
+
+                </ul>
+
+            </div>
+
+            <div class="escribir">
+                <div class="separar">
+                    <form onsubmit="return enviarMensaje1()">
+                        <div class="letras">
+                            <input id="mensaje1" autocomplete="off" placeholder="Mensaje" />
+                            <button>Enviar</button>
+                            <div class="fondo">
+                                <a href="#"><i class="fa-solid fa-paperclip fa-rotate-270" style="color: grey; font-size: 20px;"></i></a>
+                                <a href="#"><i class="fa-solid fa-camera" style="color: grey;font-size: 20px;"></i></a>
+                            </div>
+                        </div>
+
+
+                    </form>
+                    <div class="sonido">
+                        <div class="caja-micro">
+                            <a href="#"><i class="fa-solid fa-microphone"
+                                    style="color: #ffffff; font-size: 20px;"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="dock">
+                <div class="btn"></div>
+            </div>
+
+
+        </div>
+
+        <div class="chat1">
+            <div class="camara">
+                <div class="lente"></div>
+            </div>
+            <div class="cabezera">
+                <div class="titulo">
+                    <div class="wasap2"></div>
+                </div>
+                <div class="iconos">
+                    <a href="#"><i class="fa-solid fa-phone" style="color: white; font-size: 20px;"></i></a>
+                    <a href="#"><i class="fa-solid fa-paperclip fa-rotate-270"
+                            style="color: white; font-size: 20px;"></i></a>
+                    <a href="#"><i class="fa-solid fa-ellipsis fa-rotate-90"
+                            style="color: white; font-size: 20px;"></i></a>
+
+
+                </div>
+            </div>
+
+            <div class="mensajesx">
+                <ul id="lista-mensajes"></ul>
+            </div>
+
+            <div class="escribir">
+                <div class="separar">
+
+
+                    <form onsubmit="return enviarMensaje2()">
+                        <div class="letras">
+                            <input id="mensaje2" autocomplete="off" placeholder="Mensaje" />
+                            <button>Enviar</button>
+
+                            <div class="fondo">
+                                <a href="#"><i class="fa-solid fa-paperclip fa-rotate-270" style="color: grey; font-size: 20px;"></i></a>
+                                <a href="#"><i class="fa-solid fa-camera" style="color: grey;font-size: 20px;"></i></a>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                    <div class="sonido">
+                        <div class="caja-micro">
+                            <a href="#"><i class="fa-solid fa-microphone"
+                                    style="color: #ffffff; font-size: 20px;"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="dock">
+                <div class="btn"></div>
+            </div>
+
+
+        </div>
+
+
+
+    </section>
+
+    <section>
+
+    </section>
+
+    <script>
+        //Obteniendo datos
+
+        const listadox = document.querySelector(".wasap1");
+        const listadox2 = document.querySelector(".wasap2");
+
+        const verProductos = (nombre, imagen, _id) => {
+            const html_ul = document.createElement("div");  /* creando una etiquetq ul*/
+
+            const contenido = `
+                            <div class="title">
+                                <img src="${imagen}" alt="Perfil">
+                                <div class="nombre">
+                                    <a href="/confi?id=${_id}" class="e" style="font-size: 20px;"></> ${nombre} </a> <br><br>
+                                    <a>En linea</a>
+                                </div>  
+                            </div>                               
+                                    
+                                                  
+                            `;
+
+            html_ul.innerHTML = contenido; /* añadimos el cun contenido dentro de la etiqueta nates creada */
+            return (html_ul);
+        }
+
+
+        /*const nombre1 = document.getElementById("user1");
+        const nombre2 = document.getElementById("user2");*/
+        //console.log(nombre1.innerHTML)
+        const ejecutar = async () => {
+            const usu1 = await verUsuario("64446455f9e667147c44c1e6")
+            const usu2 = await verUsuario("6444647bf9e667147c44c1e8")
+            /*console.log(usu1.nombre)
+            console.log(usu2.nombre)
+            nombre1.innerHTML = usu1.nombre;
+            nombre2.innerHTML = usu2.nombre;*/
+
+            const mostrar = verProductos(usu1.nombre, usu1.imagen, usu1._id);
+            listadox.appendChild(mostrar);
+            const mostrar2 = verProductos(usu2.nombre, usu2.imagen, usu2._id);
+            listadox2.appendChild(mostrar2);
+        }
+
+        ejecutar()
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://kit.fontawesome.com/2811698395.js" crossorigin="anonymous"></script>
+    
+
+    <title>Document</title>
+
+    <style>
+        .contenido {
+
+            padding: 10px;
+        }
+
+        .contenido-edit {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .contenido-edit form {
+            background: #292929;
+            padding: 10px;
+            width: 610px;
+
+        }
+
+
+        .datos label {
+            color: aliceblue;
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .datos input {
+            width: 100%;
+            background-color: white;
+            box-shadow: 7px 7px 15px rgba(0, 0, 0, 0.06);
+            border: none;
+            padding: 10px 5px;
+            /*ariba 10  costados 5*/
+            outline-color: rgb(16, 182, 16);
+            /*color de border al seleccionar input*/
+            font-size: 16px;
+            box-sizing: border-box;
+            /*Para que los imput ocupne el espacio que ele cooresponde en una  caja*/
+        }
+
+        .contenido-edit button {
+            color: white;
+            background: rgb(22, 155, 22);
+            margin: 15px 0;
+            border: none;
+            padding: 10px 8px;
+            font-weight: 700;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+    <section>
+        <h1>Editar perfiles</h1>
+    </section>
+
+    <section class="cajaform">
+
+        <div class="contenido">
+            <div class="contenido-edit">
+                <form action="" data-form1>
+                    <div class="datos">
+                        <label>nombre</label>
+                        <input type="text" data-nombre1 required>
+
+                    </div>
+                    <div class="datos">
+                        <label>Colocar nuevo perfil</label>
+                        <input type="text" data-imagen1 required>
+
+                    </div>
+
+                    <button>Aceptar</button>
+                </form>
+                
+                <!--<form action="" data-form2>
+                    <div class="datos">
+                        <label>nombre</label>
+                        <input type="text" data-nombre2 required>
+                    </div>
+                    <div class="datos">
+                        <label>Colocar nuevo perfil</label>
+                        <input type="text" data-imagen2 required>
+
+                    </div>
+                    <button>Aceptar</button>
+                </form> -->
+
+                
+
+
+
+
+
+            </div>
+        </div>
+
+    </section>
+
+   
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+   
+    <script>
+
+        //Buscar dor ID
+        const URLu = "http://localhost:4000/usarios/";
+        const showUsuario = async (id) => {
+            try {
+                const t = await axios.get(URLu + id);
+                //console.log(t.data)
+                return t.data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        /*--------------------------Controlador de usarios a editar---------------------------*/
+        const url = new URL(window.location);
+        const id = url.searchParams.get("id");
+        console.log(id);
+        const formulario = document.querySelector("[data-form1]"); //referencia al formulario
+
+        
+        /*--------------------------Controlador de usarios a editar---------------------------*/
+
+        //Mostar datos actules del usuario
+        const obtenerInfo = async () => {
+            const nombre = document.querySelector("[data-nombre1]");
+            const imagen = document.querySelector("[data-imagen1]");
+
+
+            const user = await showUsuario(id)
+            nombre.value = user.nombre;
+            imagen.value = user.imagen;
+        }
+
+        obtenerInfo()
+
+        //Actualizar
+        //http://localhost:4000/user/6444ad921f6165bd91add100
+        const Urluser = "http://localhost:4000/user/"
+        const Editar = async (nombre, imagen, id) => {
+            try {
+                await axios.put(`${Urluser}${id}`, {
+                    "nombre": String(nombre),
+                    "imagen": String(imagen),
+
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        
+
+        /*--------------------------Registrar-----------------------*/
+        formulario.addEventListener("submit", async (evento) => {
+            const nombre = document.querySelector("[data-nombre1]").value;
+            const imagen = document.querySelector("[data-imagen1]").value;
+
+            if (id === null) {
+                /*evento.preventDefault();
+                await Datacel.Registrocel(nombre, descripcion, imagen);
+                window.location.href = "general.html";*/
+                console.log("seccion de construccion")
+
+            } else {
+                evento.preventDefault();
+                await Editar(nombre, imagen, id);
+                window.location.href = "/";
+
+            }
+
+        })
+
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
